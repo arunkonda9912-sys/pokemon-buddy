@@ -113,15 +113,16 @@ function speak(text){
  u.onstart=()=>animate("talking");u.onend=()=>animate("");u.onerror=()=>animate("");speechSynthesis.speak(u);
 }
 function say(text){
- const p=pals[idx];
+ const p=pals[idx]||pals[0];
  const calls=["Pikachuuuuu!","Eeveee!","Char-char!","Squirtleee!","Bulba-saur!"];
  const call=calls[idx]||p.voice;
- let reply=(text||"").trim();
- // Remove any old Pokémon catchphrase so only the selected character speaks its own.
- reply=reply.replace(/(?:Pikachuuuuu|Eeveee|Char-char|Squirtleee|Bulba-saur)!?\s*$/i,"").trim();
+ let reply=String(text||"").trim();
+ // For non-Pikachu characters, remove every Pikachu-specific word/sound,
+ // not just a final catchphrase, before adding that character's own call.
  if(idx!==0){
-   reply=reply.replace(/Pika[- ]?pika!?|Pika-?chu!?|Pikachuuuuu!?/gi,"").replace(/\s{2,}/g," ").trim();
+   reply=reply.replace(/pikachu+|pika[-\s]?(?:pika|chu)?|pika\w*/gi,"");
  }
+ reply=reply.replace(/(?:Pikachuuuuu|Eeveee|Char-char|Squirtleee|Bulba-saur)!?\s*$/i,"").replace(/\s{2,}/g," ").trim();
  reply=(reply?reply+" ":"")+call;
  $("message").textContent=reply;
  $("mood").textContent=p.voice+" "+(lang==="en"?"Your buddy is listening to you.":"Tvůj kamarád tě poslouchá.");
