@@ -108,7 +108,7 @@ const pick=a=>a[Math.floor(Math.random()*a.length)];
 function animate(mode){$("stage").classList.remove("talking","listening");if(mode)$("stage").classList.add(mode);}
 function speak(text){
  if(!$("voiceOn").checked||!("speechSynthesis"in window))return;
- speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang=lang==="cs"?"cs-CZ":"en-US";u.rate=lang==="cs"?.88:.9;u.pitch=1.28;
+ speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang=lang==="cs"?"cs-CZ":"en-US";u.rate=lang==="cs"?.92:.96;u.pitch=idx===0?1.62:1.28;
  const voices=speechSynthesis.getVoices();const voice=voices.find(v=>v.lang.toLowerCase().startsWith(lang==="cs"?"cs":"en"));if(voice)u.voice=voice;
  u.onstart=()=>animate("talking");u.onend=()=>animate("");u.onerror=()=>animate("");speechSynthesis.speak(u);
 }
