@@ -130,7 +130,7 @@ function say(text){
  $("mood").textContent=p.voice+" "+(lang==="en"?"Your buddy is listening to you.":"Tvůj kamarád tě poslouchá.");
  speak(reply);
 }
-function setPal(){const p=pals[idx];$("pokemonName").textContent=p.name;$("pokemonViewer").src="https://raw.githubusercontent.com/06wj/pokemon/master/public/models/"+String(p.id).padStart(3,"0")+"/model.glb";$("pokemonViewer").animationName="idle";$("pokemonViewer").play();$("mood").textContent=p.voice+" "+(lang==="en"?"Let's be friends!":"Budeme kamarádi!");}
+function setPal(){const p=pals[idx];$("pokemonName").textContent=p.name;$("pokemonViewer").src="https://raw.githubusercontent.com/06wj/pokemon/master/public/models/"+String(p.id).padStart(3,"0")+"/model.glb";$("pokemonViewer").setAttribute("animation-name","idle");if(typeof $("pokemonViewer").play==="function")$("pokemonViewer").play();$("mood").textContent=p.voice+" "+(lang==="en"?"Let's be friends!":"Budeme kamarádi!");}
 function newPal(){idx=(idx+1)%pals.length;setPal();say(lang==="en"?"Look! It's "+pals[idx].name+"! "+pals[idx].voice:"Podívej! To je "+pals[idx].name+"! "+pals[idx].voice);}
 function respond(raw){
  const t=raw.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
@@ -222,7 +222,7 @@ $("repeatBtn").addEventListener("click",()=>speak($("message").textContent));
 $("gameBtn").addEventListener("click",()=>say(pick(words[lang].play)));
 $("storyBtn").addEventListener("click",()=>say(pick(words[lang].story)));
 $("nextBtn").addEventListener("click",newPal);
-function motion(name){const m=$("pokemonViewer");if(!m)return;m.animationName=name;m.play();animate("talking");if(name!=="idle")setTimeout(()=>{m.animationName="idle";m.play();animate("");},name==="run"?2200:1800);}
+function motion(name){const m=$("pokemonViewer");if(!m)return;m.setAttribute("animation-name",name);if(typeof m.play==="function")m.play();animate("talking");if(name!=="idle")setTimeout(()=>{m.setAttribute("animation-name","idle");if(typeof m.play==="function")m.play();animate("");},name==="run"?2200:1800);}
 $("waveBtn").addEventListener("click",()=>{motion("happy");say("Hello, friend!");});
 $("runBtn").addEventListener("click",()=>{motion("run");say("Ready, set, go!");});
 $("danceBtn").addEventListener("click",()=>{motion("happy");say("Yay! Happy dance!");});
