@@ -60,7 +60,7 @@ button:active{transform:translateY(2px);box-shadow:0 1px 0 #d5ddeb}
 <div class="setting"><label for="language">Language</label><select id="language"><option value="en">English</option><option value="cs">Čeština</option></select></div>
 <div class="setting"><label for="voiceOn">Speak replies aloud</label><input id="voiceOn" type="checkbox" checked></div>
 <div class="setting"><label for="autoSwitch">Meet a new Pokémon sometimes</label><input id="autoSwitch" type="checkbox"></div>
-<p class="note">Voice recognition varies by browser. If the microphone does not work on your iPhone, try typing. Replies are playful built-in responses, not a live AI. Please supervise microphone use.</p>
+<p class="note">Voice recognition varies by browser. If the microphone does not work on your iPhone, try typing. Replies use simple built-in word matching, not a live AI, so some things may be misunderstood. Please supervise microphone use.</p>
 </details>
 <p class="note">Pokémon names and characters belong to their respective owners. Character pictures need an internet connection.</p>
 </main>
@@ -112,7 +112,13 @@ function speak(text){
  const voices=speechSynthesis.getVoices();const voice=voices.find(v=>v.lang.toLowerCase().startsWith(lang==="cs"?"cs":"en"));if(voice)u.voice=voice;
  u.onstart=()=>animate("talking");u.onend=()=>animate("");u.onerror=()=>animate("");speechSynthesis.speak(u);
 }
-function say(text){$("message").textContent=text;$("mood").textContent=lang==="en"?"Pika-pika! Your buddy is listening to you.":"Pika-pika! Tvůj kamarád tě poslouchá.";speak(text);}
+function say(text){
+ const ending="Pikachuuuuu!";
+ const reply=(text||"").trim().replace(/(?:pikachuuuuu!?\\s*)+$/i,"").trim()+" "+ending;
+ $("message").textContent=reply;
+ $("mood").textContent=lang==="en"?"Pika-pika! Your buddy is listening to you.":"Pika-pika! Tvůj kamarád tě poslouchá.";
+ speak(reply);
+}
 function setPal(){const p=pals[idx];$("pokemonName").textContent=p.name;$("pokemonImage").src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/"+p.id+".png";$("pokemonImage").alt=p.name;$("mood").textContent=p.voice+" "+(lang==="en"?"Let's be friends!":"Budeme kamarádi!");}
 function newPal(){idx=(idx+1)%pals.length;setPal();say(lang==="en"?"Look! It's "+pals[idx].name+"! "+pals[idx].voice:"Podívej! To je "+pals[idx].name+"! "+pals[idx].voice);}
 function respond(raw){
@@ -130,6 +136,11 @@ function respond(raw){
  else if(/(tell me a story|story|pohad|pribeh)/.test(t)){say(pick(words[lang].story));return;}
  else if(/(sing|song|zaspivej|pisnick)/.test(t)){say(lang==="en"?"Pika-pika, la la la! Yellow cheeks and a happy day!":"Pika-pika, la la la! Žluté tvářičky, veselý den!");return;}
  else if(/(what can you do|can you play|co umis|co dokazes)/.test(t)){say(lang==="en"?"We can play a guessing game, count to five, hear a story, or meet another Pokémon! What shall we do?":"Můžeme hádat, počítat do pěti, poslouchat pohádku nebo potkat dalšího Pokémona! Co si vybereš?");return;}
+ else if(/(red|blue|green|yellow|red|modr|cerven|zelen|zlut|colour|color|barv)/.test(t)){say(lang==="en"?"You mentioned a colour! I love bright yellow. What is your favourite colour?":"Zmínil jsi barvu! Mám rád zářivě žlutou. Jaká barva se ti líbí nejvíc?");return;}
+ else if(/(dog|cat|puppy|kitten|ko[cč]ka|pes|pejsek|kot[eě])/.test(t)){say(lang==="en"?"You are talking about an animal! I wonder what sound it makes. Can you make that animal sound?":"Mluvíš o zvířátku! Jaký asi dělá zvuk? Zkusíš ho napodobit?");return;}
+ else if(/(mum|mom|dad|mummy|daddy|maminka|tatinek|tatínek|babi|grandma|grandpa)/.test(t)){say(lang==="en"?"You are telling me about your family! What do you like doing together?":"Vyprávíš mi o rodině! Co spolu rádi děláte?");return;}
+ else if(/(toy|teddy|doll|car|truck|hra[cč]|medv[ií]dek|panenka|aut[ií][cč]ko)/.test(t)){say(lang==="en"?"That sounds like a fun toy! What is its name?":"To zní jako báječná hračka! Jak se jmenuje?");return;}
+ else if(/(one|two|three|four|five|six|seven|eight|nine|ten|jedna|dva|tri|tři|ctyri|čtyři|pet|pět)/.test(t)){say(lang==="en"?"Let's count together! One, two, three, four, five! Can you count again with me?":"Počítejme spolu! Jedna, dva, tři, čtyři, pět! Zkusíme to ještě jednou?");return;}
  else if(/(pokemon|pikachu|pika|eevee|charmander|squirtle)/.test(t))k="pokemon";
  else if(/(play|game|hra|hrat|hraj)/.test(t))k="play";
  else if(/(yes|yeah|yep|ano|jo|jasne)/.test(t))k="yes";
