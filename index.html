@@ -113,10 +113,15 @@ function speak(text){
  u.onstart=()=>animate("talking");u.onend=()=>animate("");u.onerror=()=>animate("");speechSynthesis.speak(u);
 }
 function say(text){
- const ending="Pikachuuuuu!";
- const reply=(text||"").trim().replace(/(?:pikachuuuuu!?\\s*)+$/i,"").trim()+" "+ending;
+ const p=pals[idx];
+ const calls=["Pikachuuuuu!","Eeveee!","Char-char!","Squirtleee!","Bulba-saur!"];
+ const call=calls[idx]||p.voice;
+ let reply=(text||"").trim();
+ if(idx!==0) reply=reply.replace(/pika[- ]?(?:pika|chu|chu)?/gi,"").replace(/pikachuuuuu!?/gi,"").replace(/\\s{2,}/g," ").trim();
+ reply=reply.replace(/(?:pikachuuuuu|eeveee|char-char|squirtleee|bulba-saur)!?\\s*$/i,"").trim();
+ reply=(reply?reply+" ":"")+call;
  $("message").textContent=reply;
- $("mood").textContent=lang==="en"?"Pika-pika! Your buddy is listening to you.":"Pika-pika! Tvůj kamarád tě poslouchá.";
+ $("mood").textContent=p.voice+" "+(lang==="en"?"Your buddy is listening to you.":"Tvůj kamarád tě poslouchá.");
  speak(reply);
 }
 function setPal(){const p=pals[idx];$("pokemonName").textContent=p.name;$("pokemonViewer").src="https://raw.githubusercontent.com/06wj/pokemon/master/public/models/"+String(p.id).padStart(3,"0")+"/model.glb";$("pokemonViewer").animationName="idle";$("pokemonViewer").play();$("mood").textContent=p.voice+" "+(lang==="en"?"Let's be friends!":"Budeme kamarádi!");}
