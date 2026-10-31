@@ -33,7 +33,9 @@ button:active{transform:translateY(2px);box-shadow:0 1px 0 #d5ddeb}
 @keyframes happyHop{from{transform:translateY(0) rotate(-5deg) scale(1)}to{transform:translateY(-17px) rotate(5deg) scale(1.04)}}
 @keyframes listenPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
 @keyframes twinkle{0%,100%{opacity:.35;transform:scale(.8) rotate(0)}50%{opacity:1;transform:scale(1.25) rotate(18deg)}}
-@media(min-width:900px){.card{padding:28px}.buttons{gap:14px}.stage{height:480px}.bubble{font-size:22px;padding:20px}}\n@media(max-width:600px){main{width:100%}.stage{height:clamp(270px,78vw,390px)}.card{border-radius:24px}}\n@media(max-width:370px){main{padding-top:8px}.card{padding:10px}.buttons{gap:7px}button{padding:10px 7px;font-size:14px;min-height:47px}.talkrow button{min-width:65px}}
+@media(min-width:900px){.card{padding:28px}.buttons{gap:14px}.stage{height:480px}.bubble{font-size:22px;padding:20px}}
+@media(max-width:600px){main{width:100%}.stage{height:clamp(270px,78vw,390px)}.card{border-radius:24px}}
+@media(max-width:370px){main{padding-top:8px}.card{padding:10px}.buttons{gap:7px}button{padding:10px 7px;font-size:14px;min-height:47px}.talkrow button{min-width:65px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -229,7 +231,9 @@ $("languageBtn").addEventListener("click",()=>setLang(lang==="en"?"cs":"en"));
 $("language").addEventListener("change",e=>setLang(e.target.value));
 function send(){const v=$("childInput").value.trim();if(!v)return;$("childInput").value="";$("status").textContent=(lang==="en"?"You said: ":"Řekl jsi: ")+v;respond(v);}
 $("sendBtn").addEventListener("click",send);$("childInput").addEventListener("keydown",e=>{if(e.key==="Enter")send();});
-if("speechSynthesis"in window)speechSynthesis.onvoiceschanged=()=>{};\nconst viewer=$("pokemonViewer");viewer.addEventListener("error",()=>{$("status").textContent=lang==="en"?"3D character could not load. Check your internet connection or try a newer browser.":"3D postavičku se nepodařilo načíst. Zkontroluj internet nebo zkus novější prohlížeč.";});\nif(!("speechSynthesis"in window))$("status").textContent=lang==="en"?"This browser cannot speak aloud. Try Chrome, Safari or Edge.":"Tento prohlížeč neumí přehrávat řeč. Zkus Chrome, Safari nebo Edge.";
+if("speechSynthesis"in window)speechSynthesis.onvoiceschanged=()=>{};
+const viewer=$("pokemonViewer");viewer.addEventListener("error",()=>{$("status").textContent=lang==="en"?"3D character could not load. Check your internet connection or try a newer browser.":"3D postavičku se nepodařilo načíst. Zkontroluj internet nebo zkus novější prohlížeč.";});
+if(!("speechSynthesis"in window))$("status").textContent=lang==="en"?"This browser cannot speak aloud. Try Chrome, Safari or Edge.":"Tento prohlížeč neumí přehrávat řeč. Zkus Chrome, Safari nebo Edge.";
 if("serviceWorker"in navigator&&location.protocol.startsWith("http"))window.addEventListener("load",()=>navigator.serviceWorker.register("./service-worker.js").catch(()=>{}));
 setPal();say(pick(words.en.hello));
 })();
