@@ -141,7 +141,9 @@ function respond(raw){
  else if(/(mum|mom|dad|mummy|daddy|maminka|tatinek|tatínek|babi|grandma|grandpa)/.test(t)){say(lang==="en"?"You are telling me about your family! What do you like doing together?":"Vyprávíš mi o rodině! Co spolu rádi děláte?");return;}
  else if(/(toy|teddy|doll|car|truck|hra[cč]|medv[ií]dek|panenka|aut[ií][cč]ko)/.test(t)){say(lang==="en"?"That sounds like a fun toy! What is its name?":"To zní jako báječná hračka! Jak se jmenuje?");return;}
  else if(/(one|two|three|four|five|six|seven|eight|nine|ten|jedna|dva|tri|tři|ctyri|čtyři|pet|pět)/.test(t)){say(lang==="en"?"Let's count together! One, two, three, four, five! Can you count again with me?":"Počítejme spolu! Jedna, dva, tři, čtyři, pět! Zkusíme to ještě jednou?");return;}
- else if(/(run|running|race|beh[iy]b|ut[ií]kej)/.test(t)){motion("run");say(lang==="en"?"Let’s run together! Pikachuuuuu!":"Poběžíme spolu! Pikachuuuuu!");return;}\n else if(/(electric|power|thunder|zap|lightning|blesk|elektr)/.test(t)){motion("attack");say(lang==="en"?"Pikaaaa! Zaaap! Electric power! Pikachuuuuu!":"Pikaaaa! Bzzzt! Elektrická síla! Pikachuuuuu!");return;}\n else if(/(pokemon|pikachu|pika|eevee|charmander|squirtle)/.test(t))k="pokemon";
+ else if(/(run|running|race|beh[iy]b|ut[ií]kej)/.test(t)){motion("run");say(lang==="en"?"Let’s run together! Pikachuuuuu!":"Poběžíme spolu! Pikachuuuuu!");return;}
+ else if(/(electric|power|thunder|zap|lightning|blesk|elektr)/.test(t)){motion("attack");say(lang==="en"?"Pikaaaa! Zaaap! Electric power! Pikachuuuuu!":"Pikaaaa! Bzzzt! Elektrická síla! Pikachuuuuu!");return;}
+ else if(/(pokemon|pikachu|pika|eevee|charmander|squirtle)/.test(t))k="pokemon";
  else if(/(play|game|hra|hrat|hraj)/.test(t))k="play";
  else if(/(yes|yeah|yep|ano|jo|jasne)/.test(t))k="yes";
  else if(/(no|nope|ne|nechci)/.test(t))k="no";
