@@ -126,6 +126,10 @@ function respond(raw){
  else if(/(happy|excited|radost|stastn|vesel|super)/.test(t))k="happy";
  else if(/(thank|thanks|deku|diky)/.test(t))k="thanks";
  else if(/(food|eat|hungry|snack|jidl|jidlo|mam hlad|mnam)/.test(t))k="food";
+ else if(/(what is your name|who are you|jak se jmenujes|kdo jsi)/.test(t)){say(lang==="en"?"I'm Pikachu, your playtime buddy! You can call me Pika!":"Jsem Pikachu, tvůj kamarád na hraní! Říkej mi Pika!");return;}
+ else if(/(tell me a story|story|pohad|pribeh)/.test(t)){say(pick(words[lang].story));return;}
+ else if(/(sing|song|zaspivej|pisnick)/.test(t)){say(lang==="en"?"Pika-pika, la la la! Yellow cheeks and a happy day!":"Pika-pika, la la la! Žluté tvářičky, veselý den!");return;}
+ else if(/(what can you do|can you play|co umis|co dokazes)/.test(t)){say(lang==="en"?"We can play a guessing game, count to five, hear a story, or meet another Pokémon! What shall we do?":"Můžeme hádat, počítat do pěti, poslouchat pohádku nebo potkat dalšího Pokémona! Co si vybereš?");return;}
  else if(/(pokemon|pikachu|pika|eevee|charmander|squirtle)/.test(t))k="pokemon";
  else if(/(play|game|hra|hrat|hraj)/.test(t))k="play";
  else if(/(yes|yeah|yep|ano|jo|jasne)/.test(t))k="yes";
@@ -136,14 +140,58 @@ function respond(raw){
 function setLang(v){lang=v;$("language").value=v;document.documentElement.lang=v;$("languageBtn").textContent=v==="en"?"🇬🇧 English":"🇨🇿 Česky";$("tagline").textContent=v==="en"?"A little friend to talk, giggle and play with!":"Malý kamarád na povídání, smích a hraní!";$("listenBtn").textContent=v==="en"?"🎤 Talk to Pikachu":"🎤 Povídej si s Pikachu";$("childInput").placeholder=v==="en"?"Or type what you want to say…":"Nebo napiš, co chceš říct…";setPal();say(pick(words[lang].hello));}
 function startListening(){
  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
- if(!SR){$("status").textContent=lang==="en"?"This browser doesn't offer speech recognition. Try typing below, or open the app in a supported browser.":"Tento prohlížeč nepodporuje rozpoznávání řeči. Zkus zprávu napsat.";return;}
- if(listening&&recognition){recognition.stop();return;}
- recognition=new SR();recognition.lang=lang==="cs"?"cs-CZ":"en-US";recognition.interimResults=true;recognition.maxAlternatives=1;recognition.continuous=false;listening=true;
- $("listenBtn").textContent=lang==="en"?"👂 Listening… tap to stop":"👂 Poslouchám… klepni pro konec";$("status").textContent=lang==="en"?"I'm listening! Tell me something.":"Poslouchám! Něco mi pověz.";animate("listening");
- recognition.onresult=e=>{let text="";for(let i=e.resultIndex;i<e.results.length;i++)text+=e.results[i][0].transcript;if(e.results[e.results.length-1].isFinal){$("status").textContent=(lang==="en"?"You said: ":"Řekl jsi: ")+text;respond(text);}};
- recognition.onerror=e=>{$("status").textContent=lang==="en"?"I couldn't hear that. Please try again or type.":"Nerozuměl jsem. Zkus to znovu nebo napiš zprávu.";};
- recognition.onend=()=>{listening=false;animate("");$("listenBtn").textContent=lang==="en"?"🎤 Talk to Pikachu":"🎤 Povídej si s Pikachu";};
- try{recognition.start();}catch(e){listening=false;animate("");$("status").textContent=lang==="en"?"Microphone unavailable. Try typing.":"Mikrofon není dostupný. Zkus psát.";}
+ if(!window.isSecureContext){$("status").textContent=lang==="en"?"Microphone needs a secure HTTPS page. Open the GitHub Pages link in Safari.":"Mikrofon potřebuje zabezpečenou HTTPS stránku. Otevři odkaz GitHub Pages v Safari.";return;}
+ if(!SR){$("status").textContent=lang==="en"?"Voice listening isn't available in this browser. On iPhone, open this page directly in Safari, allow Microphone, or use the text box.":"Tento prohlížeč nepodporuje hlasové rozpoznávání. Na iPhonu otevři stránku přímo v Safari, povol mikrofon nebo použij textové pole.";return;}
+ if(listening&&recognition){try{recognition.stop();}catch(e){}return;}
+ try{
+  recognition=new SR();
+  recognition.lang=lang==="cs"?"cs-CZ":"en-US";
+  recognition.interimResults=true;
+  recognition.maxAlternatives=5;
+  recognition.continuous=false;
+  let finalText="";
+  listening=true;
+  $("listenBtn").textContent=lang==="en"?"👂 Listening… tap to stop":"👂 Poslouchám… klepni pro konec";
+  $("status").textContent=lang==="en"?"Listening… speak clearly, then pause.":"Poslouchám… mluv zřetelně a potom se odmlč.";
+  animate("listening");
+  recognition.onresult=e=>{
+   let interim="";
+   for(let i=e.resultIndex;i<e.results.length;i++){
+    const candidate=e.results[i][0].transcript;
+    if(e.results[i].isFinal)finalText+=candidate+" ";
+    else interim+=candidate;
+   }
+   const preview=(finalText+interim).trim();
+   if(preview)$("status").textContent=(lang==="en"?"I hear: ":"Slyším: ")+preview;
+   if(finalText.trim()){
+    const heard=finalText.trim();
+    finalText="";
+    $("status").textContent=(lang==="en"?"You said: ":"Řekl jsi: ")+heard;
+    respond(heard);
+   }
+  };
+  recognition.onnomatch=()=>{$("status").textContent=lang==="en"?"I didn't catch the words. Try speaking a little slower, closer to the phone.":"Slovům jsem nerozuměl. Zkus mluvit pomaleji a blíž k telefonu.";};
+  recognition.onerror=e=>{
+   const messages={
+    "not-allowed":lang==="en"?"Microphone permission is blocked. In iPhone Settings → Safari → Microphone, allow access.":"Přístup k mikrofonu je zablokovaný. V Nastavení iPhonu → Safari → Mikrofon povol přístup.",
+    "service-not-allowed":lang==="en"?"This browser's speech service is unavailable. Try Safari again later or type your message.":"Služba rozpoznávání řeči není dostupná. Zkus to později nebo napiš zprávu.",
+    "no-speech":lang==="en"?"I didn't hear anything. Tap the microphone and try again.":"Nic jsem neslyšel. Klepni na mikrofon a zkus to znovu.",
+    "audio-capture":lang==="en"?"I can't access the microphone. Check that no other app is using it.":"Nemohu použít mikrofon. Zkontroluj, zda ho nepoužívá jiná aplikace.",
+    "network":lang==="en"?"Speech recognition needs an internet connection. Check Wi-Fi or mobile data.":"Rozpoznávání řeči potřebuje internet. Zkontroluj připojení."
+   };
+   $("status").textContent=messages[e.error]||(lang==="en"?"Listening stopped ("+e.error+"). Please try again or type.":"Poslech se zastavil ("+e.error+"). Zkus to znovu nebo napiš zprávu.");
+  };
+  recognition.onend=()=>{
+   listening=false;animate("");
+   $("listenBtn").textContent=lang==="en"?"🎤 Talk to Pikachu":"🎤 Povídej si s Pikachu";
+   if(!finalText.trim()&&$("status").textContent.startsWith(lang==="en"?"Listening":"Poslouchám"))$("status").textContent=lang==="en"?"Tap the microphone and try again.":"Klepni na mikrofon a zkus to znovu.";
+  };
+  recognition.start();
+ }catch(e){
+  listening=false;animate("");
+  $("listenBtn").textContent=lang==="en"?"🎤 Talk to Pikachu":"🎤 Povídej si s Pikachu";
+  $("status").textContent=lang==="en"?"The microphone couldn't start. Check Safari permissions and try again.":"Mikrofon se nepodařilo spustit. Zkontroluj oprávnění Safari a zkus to znovu.";
+ }
 }
 $("listenBtn").addEventListener("click",startListening);
 $("repeatBtn").addEventListener("click",()=>speak($("message").textContent));
