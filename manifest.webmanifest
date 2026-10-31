@@ -1,0 +1,14 @@
+{
+  "name": "Pokémon Buddy",
+  "short_name": "Pokémon Buddy",
+  "description": "A friendly bilingual Pokémon voice buddy for family play.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fff8e8",
+  "theme_color": "#fff1a8",
+  "icons": [
+    {"src": "./icons/icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "./icons/icon-512.png", "sizes": "512x512", "type": "image/png"}
+  ]
+}
