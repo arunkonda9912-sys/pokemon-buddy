@@ -149,8 +149,8 @@ function respond(raw){
  else if(/(mum|mom|dad|mummy|daddy|maminka|tatinek|tatínek|babi|grandma|grandpa)/.test(t)){say(lang==="en"?"You are telling me about your family! What do you like doing together?":"Vyprávíš mi o rodině! Co spolu rádi děláte?");return;}
  else if(/(toy|teddy|doll|car|truck|hra[cč]|medv[ií]dek|panenka|aut[ií][cč]ko)/.test(t)){say(lang==="en"?"That sounds like a fun toy! What is its name?":"To zní jako báječná hračka! Jak se jmenuje?");return;}
  else if(/(one|two|three|four|five|six|seven|eight|nine|ten|jedna|dva|tri|tři|ctyri|čtyři|pet|pět)/.test(t)){say(lang==="en"?"Let's count together! One, two, three, four, five! Can you count again with me?":"Počítejme spolu! Jedna, dva, tři, čtyři, pět! Zkusíme to ještě jednou?");return;}
- else if(/(run|running|race|beh[iy]b|ut[ií]kej)/.test(t)){motion("run");say(lang==="en"?"Let’s run together! Pikachuuuuu!":"Poběžíme spolu! Pikachuuuuu!");return;}
- else if(/(electric|power|thunder|zap|lightning|blesk|elektr)/.test(t)){motion("attack");say(lang==="en"?"Pikaaaa! Zaaap! Electric power! Pikachuuuuu!":"Pikaaaa! Bzzzt! Elektrická síla! Pikachuuuuu!");return;}
+ else if(/(run|running|race|beh[iy]b|ut[ií]kej)/.test(t)){motion("run");say(lang==="en"?"Let’s run together!":"Poběžíme spolu!");return;}
+ else if(/(electric|power|thunder|zap|lightning|blesk|elektr)/.test(t)){motion("attack");say(lang==="en"?"Pikaaaa! Zaaap! Electric power!":"Pikaaaa! Bzzzt! Elektrická síla!");return;}
  else if(/(pokemon|pikachu|pika|eevee|charmander|squirtle)/.test(t))k="pokemon";
  else if(/(play|game|hra|hrat|hraj)/.test(t))k="play";
  else if(/(yes|yeah|yep|ano|jo|jasne)/.test(t))k="yes";
@@ -220,10 +220,10 @@ $("gameBtn").addEventListener("click",()=>say(pick(words[lang].play)));
 $("storyBtn").addEventListener("click",()=>say(pick(words[lang].story)));
 $("nextBtn").addEventListener("click",newPal);
 function motion(name){const m=$("pokemonViewer");if(!m)return;m.animationName=name;m.play();animate("talking");if(name!=="idle")setTimeout(()=>{m.animationName="idle";m.play();animate("");},name==="run"?2200:1800);}
-$("waveBtn").addEventListener("click",()=>{motion("happy");say("Hello, friend! Pika-pika! Pikachuuuuu!");});
-$("runBtn").addEventListener("click",()=>{motion("run");say("Ready, set, go! Pikachuuuuu!");});
-$("danceBtn").addEventListener("click",()=>{motion("happy");say("Yay! Happy dance! Pikachuuuuu!");});
-$("sleepBtn").addEventListener("click",()=>{motion("sleep");say(lang==="en"?"Sleepy time! Pikachuuuuu!":"Čas spinkat! Pikachuuuuu!");});$("zapBtn").addEventListener("click",()=>{motion("attack");say(lang==="en"?"Pikaaaa! Zaaap! Electric power! Pikachuuuuu!":"Pikaaaa! Bzzzt! Elektrická síla! Pikachuuuuu!");});
+$("waveBtn").addEventListener("click",()=>{motion("happy");say("Hello, friend!");});
+$("runBtn").addEventListener("click",()=>{motion("run");say("Ready, set, go!");});
+$("danceBtn").addEventListener("click",()=>{motion("happy");say("Yay! Happy dance!");});
+$("sleepBtn").addEventListener("click",()=>{motion("sleep");say(lang==="en"?"Sleepy time!":"Čas spinkat!");});$("zapBtn").addEventListener("click",()=>{motion("attack");say(lang==="en"?"Pikaaaa! Zaaap! Electric power!":"Pikaaaa! Bzzzt! Elektrická síla!");});
 $("languageBtn").addEventListener("click",()=>setLang(lang==="en"?"cs":"en"));
 $("language").addEventListener("change",e=>setLang(e.target.value));
 function send(){const v=$("childInput").value.trim();if(!v)return;$("childInput").value="";$("status").textContent=(lang==="en"?"You said: ":"Řekl jsi: ")+v;respond(v);}
