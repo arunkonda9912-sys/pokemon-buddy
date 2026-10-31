@@ -1,13 +1,28 @@
 {
-  "name": "Pokémon Buddy",
-  "short_name": "Pokémon Buddy",
-  "description": "A friendly bilingual Pokémon voice buddy for family play.",
+  "name": "Pikachu's Playtime",
+  "short_name": "Pikachu",
+  "description": "A playful English and Czech Pokémon buddy for family-supervised fun.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui",
+    "browser"
+  ],
+  "orientation": "any",
   "background_color": "#fff8e8",
-  "theme_color": "#fff1a8",
+  "theme_color": "#ffdc55",
+  "categories": [
+    "games",
+    "education"
+  ],
   "icons": [
-    {"src": "./icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any"}
+    {
+      "src": "./icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
   ]
 }
